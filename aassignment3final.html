@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <title>Canvas Demo</title>
+        <meta charset="UTF-8">
+        <meta name = "viewport"
+        content = "width=device-width", user-scalable=no, initial-scale=1.0, maximum-scale=1.0 minimum-scale="1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie-edge">
+        <link rel="stylesheet" type="text/css" href="">
+
+        <style type="text/css">
+         canvas{
+         border:1px solid black;
+   }
+   </style>
+</head>
+<body>
+        <div clas ="Wrapper">
+                <section class="color">
+                        <button class="button" onclick="red()">red</button>
+                        <button class="button" onclick="blue()">blue</button>
+                        <button class="button" onclick="yellow()">yellow</button>
+                        <button class="button" onclick="black()">black</button>
+                </section>
+
+                <section class="shape">
+                        <button class="button" onclick="circle()">Circle</button>
+                        <button class="button" onclick="regular()">Regular</button>
+                        <button class="button" onclick="cln()">clear</button>
+                </section>
+<canvas id = "a" width="800" height="500"></canvas>
+<script type="text/javascript">
+        var size = prompt('Brush size');
+        var md = false;
+        var cir = false;
+        var color='black'
+        var canvas = document.getElementById('a');
+        document.body.addEventListener("touchstart", function (e) {
+          if (e.target == canvas) {
+            e.preventDefault();
+          }
+        }, false);
+        document.body.addEventListener("touchend", function (e) {
+          if (e.target == canvas) {
+            e.preventDefault();
+          }
+        }, false);
+        document.body.addEventListener("touchmove", function (e) {
+          if (e.target == canvas) {
+            e.preventDefault();
+          }
+        }, false);
+        canvas.addEventListener('mousedown', down);
+        canvas.addEventListener('mouseup', toggledraw);
+        canvas.addEventListener('mousemove',
+        function(evt){
+                var mousePos = getMousePos(canvas, evt);
+                var context = canvas.getContext('2d');
+                var posx = mousePos.x;
+                var posy = mousePos.y;
+                draw(context,canvas, posx, posy);
+        });
+        canvas.addEventListener('touchstart', function(e){
+          mousePos = getTouchPos(canvas, e);
+          var touch = e.touches[0];
+          var mouseEvent = new MouseEvent("mousedown", {
+             clientX: touch.clientX,
+             clientY: touch.clientY
+          });
+          canvas.dispatchEvent(mouseEvent);
+        });
+        canvas.addEventListener("touchend", function (e) {
+          var mouseEvent = new MouseEvent("mouseup", {});
+          canvas.dispatchEvent(mouseEvent);
+        });
+        canvas.addEventListener('touchmove',
+        function(evt){
+          var touch = e.touches[0];
+          var mouseEvent = new MouseEvent("mousemove", {
+          clientX: touch.clientX,
+          clientY: touch.clientY
+          });
+          canvas.dispatchEvent(mouseEvent);
+        });
+        function cln(){
+          var context = canvas.getContext('2d');
+          context.clearRect(0, 0, canvas.width, canvas.height)
+        }
+        function circle(){
+            cir = true
+        }
+        function regular(){
+            cir = false
+        }
+        function red(){
+          color='red'
+        }
+        function blue(){
+          color='blue'
+        }
+        function yellow(){
+          color='yellow'
+        }
+        function black(){
+          color='black'
+        }
+        function down() {
+                md = true;
+        }
+        function toggledraw(){
+
+                md = false;
+                canvas.style.cursor="default";
+        }
+        function getMousePos(canvas, evt){
+                var rect = canvas.getBoundingClientRect();
+                return{
+                        x:evt.clientX - rect.left,
+                        y:evt.clientY - rect.top
+                };
+        }
+        function getTouchPos(canvas, evt) {
+          var rect = canvas.getBoundingClientRect();
+          return {
+            x: evt.touches[0].clientX - rect.left,
+            y: evt.touches[0].clientY - rect.top
+
+          };
+        }
+        function draw(context,canvas, posx, posy){
+                context.fillStyle=color
+                if(cir && md){
+                  context.beginPath();
+                  context.arc(posx,posy,size,0,2*Math.PI);
+                  context.fill();
+                  context.closePath();
+                }
+                else if(md){
+                        canvas.style.cursor="pointer";
+                         context.fillRect(posx, posy, size, size);
+                }
+        }
+
+
+
+</script>
+<button onclick="window.location.reload();">reset</button>
+</body>
+</html>
